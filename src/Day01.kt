@@ -1,18 +1,40 @@
+import kotlin.math.absoluteValue
+
 fun main() {
+    fun parse(input: List<String>): Pair<MutableList<Int>, MutableList<Int>> {
+        val left = mutableListOf<Int>()
+        val right = mutableListOf<Int>()
+        input.map {
+            val split = it.split("   ")
+            left.add(split[0].toInt())
+            right.add(split[1].toInt())
+        }
+
+        return Pair(left, right)
+    }
+
     fun part1(input: List<String>): Int {
-        return input.size
+        val (left, right) = parse(input)
+        left.sort()
+        right.sort()
+
+        return left.zip(right).fold(0) { acc, (a, b) ->
+            acc + (b - a).absoluteValue
+        }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
-    }
+        val (left, right) = parse(input)
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
+        return left.fold(0) { acc, lValue ->
+            val q = right.filter { it == lValue  }.size
+            acc + q * lValue
+        }
+    }
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    check(part1(testInput) == 11)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
